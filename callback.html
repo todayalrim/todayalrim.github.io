@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>인증 완료 - 오늘 알려드림</title>
+<style>
+  body { font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; max-width: 640px; margin: 48px auto; padding: 0 16px; line-height: 1.7; color: #222; }
+  code { display: block; word-break: break-all; background: #f2f2f2; padding: 12px; border-radius: 8px; margin: 8px 0 16px; }
+  button { padding: 8px 16px; font-size: 15px; }
+</style>
+</head>
+<body>
+  <h1>인증 결과</h1>
+  <p id="msg">인증 코드를 확인하는 중입니다…</p>
+  <code id="code"></code>
+  <button id="copy" hidden>코드 복사</button>
+<script>
+  (function () {
+    var p = new URLSearchParams(location.search);
+    var code = p.get("code"), err = p.get("error");
+    var msg = document.getElementById("msg"), box = document.getElementById("code"), btn = document.getElementById("copy");
+    if (code) {
+      msg.textContent = "인증이 완료됐습니다. 아래 코드를 맥미니 터미널에 붙여넣으세요. (몇 분 안에 만료됩니다)";
+      box.textContent = code;
+      btn.hidden = false;
+      btn.onclick = function () { navigator.clipboard.writeText(code).then(function(){ btn.textContent = "복사됨"; }); };
+    } else if (err) {
+      msg.textContent = "인증이 취소되었거나 실패했습니다: " + err + " " + (p.get("error_description") || "");
+      box.hidden = true;
+    } else {
+      msg.textContent = "이 페이지는 업로드 프로그램의 로그인 결과를 보여주는 용도입니다.";
+      box.hidden = true;
+    }
+  })();
+</script>
+</body>
+</html>
